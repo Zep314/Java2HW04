@@ -1,8 +1,6 @@
-package data;
+package model;
 
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
-import java.util.Date;
 
 
 public abstract class Job {

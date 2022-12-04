@@ -1,10 +1,10 @@
-package data;
+package model;
 
 public class Priority {
     public final int ERROR = -1;
     public static final int LOW = 0;
-    public final int MIDDLE = 1;
-    public final int HIGH = 2;
+    public static final int MIDDLE = 1;
+    public static final int HIGH = 2;
     private int priority;
 
     Priority() {

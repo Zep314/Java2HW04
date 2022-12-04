@@ -1,4 +1,4 @@
-package data;
+package model;
 
 import java.time.LocalDateTime;
 
@@ -43,7 +43,7 @@ public class WorkJob extends Job{
         );
     }
 //    @Override
-//    public String toString() {
-//        return super.toString();
+//    public String getCreationDT() {
+//
 //    }
 }
