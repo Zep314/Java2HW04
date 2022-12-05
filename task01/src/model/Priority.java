@@ -1,17 +1,17 @@
 package model;
 
-public class Priority {
+public class Priority implements Comparable<Priority>{  // Класс - приоритет
     public final int ERROR = -1;
     public static final int LOW = 0;
     public static final int MIDDLE = 1;
     public static final int HIGH = 2;
-    private int priority;
+    protected int priority;
 
-    Priority() {
+    public Priority() {
         setPriorityLow();
     }
 
-    Priority(int priority) {
+    public Priority(int priority) {
         setPriority(priority);
     }
     public void setPriority(int priority) {
@@ -47,5 +47,11 @@ public class Priority {
             case HIGH -> { return "HIGH"; }
             default -> { return "ERROR";}
         }
+    }
+
+    // Сравниваем приоритеты
+    @Override
+    public int compareTo(Priority o) {
+        return Integer.compare(this.priority, o.priority);
     }
 }

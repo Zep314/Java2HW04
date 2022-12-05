@@ -2,7 +2,7 @@ package model;
 
 import java.time.LocalDateTime;
 
-public class WorkJob extends Job{
+public class WorkJob extends Job implements Comparable<WorkJob>{  // Класс - задача для списка задач
     int id;
     public WorkJob() {
         super();
@@ -14,8 +14,8 @@ public class WorkJob extends Job{
         super.setDeadlineDT(LocalDateTime.now());
     }
 
-    public WorkJob(int id,
-                   int priority,
+    public WorkJob(
+                   Priority priority,
                    String subject,
                    String author,
                    LocalDateTime createDT,
@@ -42,8 +42,10 @@ public class WorkJob extends Job{
                 , super.getAuthor()
         );
     }
-//    @Override
-//    public String getCreationDT() {
-//
-//    }
+
+    @Override
+    public int compareTo(WorkJob o) {  // сравниваем задачи по приоритетам
+        Priority p = this.getPriority();
+        return p.compareTo(o.priority);
+    }
 }

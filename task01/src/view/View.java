@@ -3,6 +3,7 @@ package view;
 import model.Job;
 import model.WorkJob;
 import model.Priority;
+import model.WorkJobStream;
 import util.Settings;
 
 import java.time.LocalDateTime;
@@ -10,38 +11,39 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class View {
+public class View {   // Класс вьювера - вывод на экран и взаимодействие с пользователем
     private final Logger log;
     public View(Logger log) {
         this.log = log;
-    }
-    public void info() {
+    }  // чтобы писать в один и тот же лог, что и в контроллере
+    public void info() {  // информация
         log.info("/info");
         System.out.println("Программа - планировщик личных дел");
         System.out.println("Для помощи наберите \"/help\"");
     }
-    public void bye() {
+    public void bye() {  // Прощание
         log.info("/quit");
         System.out.println("Программа завершена.");
     }
-    public void errorCommand(String cmd) {
+    public void errorCommand(String cmd) {  // Ошибку ввели
         log.info(String.format("Error command: \"%s\"\n",cmd));
         System.out.println("Неверная команда. Для помощи наберите \"help\"");
     }
-    public void help() {
+    public void help() {  // выводим помощь
         log.info("/help");
         System.out.println("Программа - поддерживает следующие команды:");
         System.out.println("/help - вывод помощи");
         System.out.println("/info - вывод информации о программе");
-        System.out.println("/printAll - печать всей базы целиком");
+        System.out.println("/printAll - печать всей базы целиком c учетом приоритетов");
         System.out.println("/printCurrent - печать текущей записи базы данных");
         System.out.println("/addRecord - добавление новой задачи");
-        System.out.println("/setRecord <id> - установка указателя текущей задачи на запись <ID>");
-        System.out.println("/save <file> - сохранение базы в файл <file> в формате JSON");
-        System.out.println("/load <file> - чтение из файла <file> в формате JSON базы данных");
+        System.out.println("/editCurrent - редактирование текущей записи");
+        System.out.println("/setRecord - установка указателя текущей задачи на требуемую запись");
+        System.out.println("/save - сохранение базы в файл в формате JSON");
+        System.out.println("/load - чтение из файла в формате JSON базы данных");
     }
 
-    public void printOneJob(Job job) {
+    public void printOneJob(Job job) {  // Выводим одну запись на экран
         log.info(String.format("/printCurrent: %s%n",((WorkJob)job).toString()));
         System.out.println("Текущая задача:");
         System.out.println("ID: "+((WorkJob)job).getId().toString());
@@ -51,7 +53,7 @@ public class View {
         System.out.println("Задача создана: "+((WorkJob)job).getCreationDT().format(Settings.formatter));
         System.out.println("Дедлайн: "+((WorkJob)job).getDeadlineDT().format(Settings.formatter));
     }
-    public WorkJob recordAddEdit(boolean edit, WorkJob job) {
+    public WorkJob recordAddEdit(boolean edit, WorkJob job) {  // Добавление или редактирование одной записи
         WorkJob newRecord = new WorkJob();
         log.info(edit ? String.format("/editRecord: %s%n", ((WorkJob)job).toString()) : "/addRecord");
         Scanner scan = new Scanner(System.in);
@@ -63,12 +65,12 @@ public class View {
             System.out.println("Если хотите оставить поле без изменений - просто нажмите Enter");
             System.out.printf("Текст задачи: %s%n", job.getSubject());
         }
-
+        // Обработка ввода текста задачи
         System.out.print("Введите текст задачи: ");
         inputLine = scan.nextLine();
         newRecord.setSubject((edit) ? (inputLine.length()>0) ? inputLine : job.getSubject() : inputLine);
 
-        do {
+        do {  // обработка ввода приоритета
             if (edit) {
                 System.out.printf("Текущий приоритет %s%n", job.getPriority());
             }
@@ -95,6 +97,8 @@ public class View {
                 default -> newRecord.setPriority(Priority.LOW);
             }
         }
+
+        // обработка ввода имени автора
         if (edit) {
             System.out.printf("Автор: %s%n", job.getAuthor());
         }
@@ -102,23 +106,24 @@ public class View {
         inputLine = scan.nextLine();
         newRecord.setAuthor((edit) ? (inputLine.length()>0) ? inputLine : job.getAuthor() : inputLine);
 
+        // Обработка времени создания записи
+        // Если редактируем - то время создания - прежнее
         if (edit) {
             newRecord.setCreationDT(job.getCreationDT());
         }
-        else {
+        else {  // Ели добавили новую задачу - ставим текущее время
             newRecord.setCreationDT(LocalDateTime.now());
         }
 
+        // Обработка ввода времени дедлайна
         isCorrect = false;
-        LocalDateTime ldt;
         do {
             if (edit) {
-                System.out.printf("Текущий дедлайн: %s%n", job.getDeadlineDT());
+                System.out.printf("Текущий дедлайн: %s%n", job.getDeadlineDT().format(Settings.formatter));
             }
             System.out.print("Введите дату и время дедлайна в формате (dd-MM-yyyy HH:mm:ss): ");
             inputLine = scan.nextLine();
             try {
-                ldt = LocalDateTime.parse(inputLine, Settings.formatter);
                 isCorrect = true;
             } catch (Exception e) {
                 if (edit && inputLine.length() == 0) {
@@ -148,7 +153,9 @@ public class View {
             return null;
         }
     }
-    public void printAll(List<WorkJob> localList) {
+    public void printAll(List<WorkJob> localList,Integer index) {  // Красивый вывод на печать всего списка задач
+        WorkJobStream stream = new WorkJobStream(localList);
+        WorkJob job = new WorkJob();
         log.info("/printAll");
         System.out.println("| ID|Приор.|      Дедлайн      |                      Задача                      |             Автор            |       Создано     |");
         System.out.printf("+%s+%s+%s+%s+%s+%s+%n"
@@ -159,15 +166,32 @@ public class View {
                 , "-".repeat(30)
                 , "-".repeat(19)
         );
-        for(WorkJob job: localList) {
-            System.out.printf("|%3d|%6s|%19s|%50s|%30s|%19s|%n"
+        stream.mySort();  // Сортируем список в соответствие с правилами
+        while (stream.hasNext()) {
+            job = stream.next();
+            System.out.printf("%s%3d|%6s|%19s|%50s|%30s|%19s|%n"
+                    , (job.getId() == index) ? "*" : "|"
                     , job.getId()
-                    , job.getPriority()
+                    , ((Priority)job.getPriority()).toString()
                     , job.getDeadlineDT().format(Settings.formatter)
                     , job.getSubject()
                     , job.getAuthor()
                     , job.getCreationDT().format(Settings.formatter)
                     );
+        }
+    }
+    public Integer setIndex() {  // установка индекса текущей записи
+        log.info("/setRecord");
+        Scanner scan = new Scanner(System.in);
+        while (true) {
+            System.out.print("Введите новый индекс текущей записи: ");
+            String inputLine = scan.nextLine();
+            if (inputLine != null && inputLine.matches("[0-9]+")) {
+                if (0 < Integer.parseInt(inputLine)) {
+                    return Integer.parseInt(inputLine);
+                }
+            }
+                System.out.println("Некорректный ввод! повторите!");
         }
     }
 }

@@ -1,0 +1,22 @@
+[2022-12-05 11:23:20] [INFO   ] /info 
+[2022-12-05 11:23:20] [INFO   ] /load 
+[2022-12-05 11:23:27] [INFO   ] /help 
+[2022-12-05 11:23:34] [INFO   ] /printAll 
+[2022-12-05 11:23:46] [INFO   ] /setRecord 
+[2022-12-05 11:23:47] [INFO   ] /setIndex -> 3 
+[2022-12-05 11:23:54] [INFO   ] Error command: "/printAll\"
+ 
+[2022-12-05 11:23:58] [INFO   ] /printAll 
+[2022-12-05 11:24:06] [INFO   ] /editRecord: ID: 3, Priority: MIDDLE, Create: 2022-12-05T08:31, Deadline: 2023-01-01T00:00:01, Subject: Поздравить маму и папу с новым годом!, Author: Дмитрий
+ 
+[2022-12-05 11:26:17] [INFO   ] Отредактированная запись:
+ID: 6, Priority: MIDDLE, Create: 2022-12-05T08:31, Deadline: 2023-01-01T00:00:01, Subject: Поздравить маму, папу и бабушку с новым годом!, Author: Дмитрий
+ 
+[2022-12-05 11:26:22] [INFO   ] /printAll 
+[2022-12-05 11:26:56] [INFO   ] /addRecord 
+[2022-12-05 11:28:07] [INFO   ] Новая запись:
+ID: 8, Priority: LOW, Create: 2022-12-05T11:27:31.819386, Deadline: 2023-01-09T07:30, Subject: Пойти на работу, Author: Анна
+ 
+[2022-12-05 11:28:14] [INFO   ] /printAll 
+[2022-12-05 11:28:22] [INFO   ] /save 
+[2022-12-05 11:28:22] [INFO   ] /quit 

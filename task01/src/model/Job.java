@@ -3,9 +3,9 @@ package model;
 import java.time.LocalDateTime;
 
 
-public abstract class Job {
+public abstract class Job {  // Абстрактный класс какой-то задачи
     private static Integer id = 0;
-    private Priority priority = new Priority(Priority.LOW);
+    public Priority priority = new Priority(Priority.LOW);
     private String subject;
     private LocalDateTime createDateTime = LocalDateTime.now();
     private LocalDateTime deadline = LocalDateTime.now();
@@ -16,6 +16,7 @@ public abstract class Job {
         priority.setPriorityLow();
     }
 
+    // геттеры - сеттеры
     public Integer getId() { return id;}
     public Priority getPriority() { return this.priority;}
     public String getSubject() { return this.subject;}
@@ -24,6 +25,7 @@ public abstract class Job {
     public String getAuthor() { return this.author;}
 
     public void setPriority(int priority) { this.priority.setPriority(priority);}
+    public void setPriority(Priority priority) { this.priority = priority;}
     public void setSubject(String subject) { this.subject = subject;}
     public void setCreationDT(LocalDateTime createDateTime) { this.createDateTime = createDateTime;}
     public void setDeadlineDT(LocalDateTime deadline) { this.deadline = deadline;}
